@@ -18,7 +18,8 @@ COPY Pipfile.lock .
 RUN PIPENV_VENV_IN_PROJECT=1 pipenv install --deploy
 
 # Runtime
-FROM gcr.io/distroless/python3
+#FROM gcr.io/distroless/python3
+FROM python:3.10-slim
 
 WORKDIR /app
 COPY --from=python-deps /.venv/lib/python3.10/site-packages /app/site-packages
