@@ -145,6 +145,7 @@ async def interaction(
 
     try:
         verify_key.verify(message, bytes.fromhex(x_signature_ed25519))
+        logging.info(f"Signature verification succeeded for {json_body}")
     except (BadSignatureError, KeyError) as exc:
         logging.warning(f"Signature verification failed for {json_body}")
         raise HTTPException(status_code=401) from exc
