@@ -184,9 +184,9 @@ if __name__ == "__main__":
         host="0.0.0.0",
         port=int(os.getenv("PORT", "8080")),
         log_level="info",
-        proxy_headers=True,
-        ssl_keyfile="./cert.key",
-        ssl_certfile="./cert.cer",
-        ssl_ca_certs="./ca.cer",
-        reload=True
+        proxy_headers=True
+        # ssl_keyfile="./cert.key",
+        # ssl_certfile="./cert.cer",
+        # ssl_ca_certs="./ca.cer",
+        # reload=True
     )
