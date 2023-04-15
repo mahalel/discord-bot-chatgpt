@@ -37,23 +37,25 @@ async def interaction2(
     message = x_signature_timestamp.encode() + request_body
     try:
         verify_key.verify(message, bytes.fromhex(x_signature_ed25519))
-        # logging.info(f"Signature verification succeeded for {request_body}")
+        # logging.info(f'Signature verification succeeded for {request_body}")
     except (BadSignatureError, KeyError) as exc:
-        # logging.warning(f"Signature verification failed for {request_body}")
+        # logging.warning(f'Signature verification failed for {request_body}")
         raise HTTPException(status_code=401) from exc
 
-    if decoded_body['type'] == 1:
+    if decoded_body["type"] == 1:
         return {"type": 1}
-    elif decoded_body['type'] == 2:
-        response_content = f"{decoded_body['member']['user']['username']}: {decoded_body['data']['options'][0]['value']}"
+    elif decoded_body["type"] == 2:
+        response_content = (f'Question from'
+            f'{decoded_body["member"]["user"]["username"]}: '
+            f'{decoded_body["data"]["options"][0]["value"]}')
         response = {"type": 4, "data": {"content": response_content}}
         openai_content = {
-            "token": decoded_body['token'],
-            "application_id": decoded_body['application_id'],
+            "token": decoded_body["token"],
+            "application_id": decoded_body["application_id"],
             "signature": x_signature_ed25519,
             "timestamp": x_signature_timestamp,
             "orig_body": decoded_body,
-            "orig_data": decoded_body['data']['options'][0]['value']
+            "orig_data": decoded_body["data"]["options"][0]["value"]
         }
         background_tasks.add_task(check_openai, message=openai_content)
         return response
@@ -62,9 +64,11 @@ async def interaction2(
 
 def check_openai(message: str):
     completion = openai.ChatCompletion.create(
-       model="gpt-3.5-turbo", messages=[{"role": "user", "content": message["orig_data"]}], temperature=0.75)
+       model="gpt-3.5-turbo",
+       messages=[{"role": "user", "content": message["orig_data"]}])
     result = completion.choices[0].message.content
-    url = f'https://discord.com/api/v10/webhooks/{message["application_id"]}/{message["token"]}'
+    url = (f'https://discord.com/api/v10/webhooks/'
+           f'{message["application_id"]}/{message["token"]}')
     payload = {
             "content": result
     }
