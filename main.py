@@ -24,6 +24,11 @@ logging.basicConfig(level=logging.INFO)
 
 app = FastAPI()
 
+# write a path called /ping that returns "pong" used for a startup check
+@app.get("/ping")
+async def ping():
+    return "pong"
+
 @app.post("/interaction")
 async def interaction2(
     background_tasks: BackgroundTasks,
