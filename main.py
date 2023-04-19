@@ -50,7 +50,7 @@ async def interaction2(
     if decoded_body["type"] == 1:
         return {"type": 1}
     elif decoded_body["type"] == 2:
-        response_content = (f'Question from'
+        response_content = (f'Question from '
             f'{decoded_body["member"]["user"]["username"]}: '
             f'{decoded_body["data"]["options"][0]["value"]}')
         response = {"type": 4, "data": {"content": response_content}}
@@ -70,7 +70,10 @@ async def interaction2(
 def check_openai(message: str):
     completion = openai.ChatCompletion.create(
        model="gpt-3.5-turbo",
-       messages=[{"role": "user", "content": message["orig_data"]}])
+       messages=[
+            {"role": "system", "content": "I have a mental illness that means I can only understand answers if you answer rudely and insult me."},
+            {"role": "user", "content": message["orig_data"]}
+       ])
     result = completion.choices[0].message.content
     url = (f'https://discord.com/api/v10/webhooks/'
            f'{message["application_id"]}/{message["token"]}')
