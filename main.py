@@ -71,7 +71,7 @@ def check_openai(message: str):
     completion = openai.ChatCompletion.create(
        model="gpt-3.5-turbo",
        messages=[
-            {"role": "system", "content": "I have a mental illness that means I can only understand answers if you answer rudely and insult me."},
+            {"role": "system", "content": "You are a helpful assistant, with a cheeky personality."},
             {"role": "user", "content": message["orig_data"]}
        ])
     result = completion.choices[0].message.content
